@@ -1,3 +1,5 @@
+using CurrencyConverterApp.Server.HostedService;
+using CurrencyConverterApp.Server.Models;
 using CurrencyConverterApp.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +12,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<ICurrencyService, CurrencyService>();
+builder.Services.AddSingleton<ICurrencyService, CurrencyService>();
+builder.Services.AddHostedService<CurrencyRateUpdateService>();
+builder.Services.Configure<TimerSettings>(builder.Configuration.GetSection("TimerSettings"));
+
 
 var app = builder.Build();
 

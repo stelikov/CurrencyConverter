@@ -8,6 +8,7 @@ public interface ICurrencyService
 {
     Task UpdateRates();
     Dictionary<string, decimal> GetRatesByDate(DateTime date);
+    public List<string> GetRatesListByDate(DateTime date);
 }
 
 public class CurrencyService : ICurrencyService
@@ -41,7 +42,7 @@ public class CurrencyService : ICurrencyService
         }
         catch (Exception ex)
         {
-
+            // TODO LOG EXCEPTION
         }
     }
 
@@ -73,5 +74,14 @@ public class CurrencyService : ICurrencyService
                     .ToDictionary(parts => parts[0], parts => decimal.Parse(parts[1]));
 
         return rates;
+    }
+    public List<string> GetRatesListByDate(DateTime date)
+    {
+        var filePath = Path.Combine(_dataPath, $"{date:yyyy-MM-dd}.txt");
+
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException("Currency rates file not found for the given date");
+
+        return File.ReadAllLines(filePath).ToList();
     }
 }

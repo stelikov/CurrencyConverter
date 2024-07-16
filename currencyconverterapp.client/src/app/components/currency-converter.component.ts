@@ -10,10 +10,13 @@ import { CurrencyService } from '../services/currency.service';
 export class CurrencyConverterComponent {
   converterForm: FormGroup;
   convertedAmount: number;
-  currencies: string[] = ['AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'SEK', 'SGD', 'THB', 'TRY', 'USD', 'ZAR'];
+  currencies: string[] = ['EUR','AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'SEK', 'SGD', 'THB', 'TRY', 'USD', 'ZAR'];
+  rates: string[];
+  errorMessage: string = "";
 
   constructor(private fb: FormBuilder, private currencyService: CurrencyService) {
     this.convertedAmount = 0;
+    this.rates = [];
     this.converterForm = this.fb.group({
       fromCurrency: [''],
       toCurrency: [''],
@@ -22,10 +25,28 @@ export class CurrencyConverterComponent {
     });
   }
 
+  onChange(): void {
+    const { date } = this.converterForm.value;
+
+    this.errorMessage = "";
+    this.convertedAmount = 0;
+    this.rates = [];
+    this.currencyService.getRates(date)
+      .subscribe(
+        rates => this.rates = rates,
+        error => this.errorMessage = error
+      );
+  }
+
   onSubmit(): void {
     const { fromCurrency, toCurrency, amount, date } = this.converterForm.value;
+
+    this.errorMessage = "";
     this.currencyService.getConvertedAmount(fromCurrency, toCurrency, amount, date)
-      .subscribe(result => this.convertedAmount = result);
+      .subscribe(
+        result => this.convertedAmount = result,
+        error => this.errorMessage = error
+      );
   }
 
   onReset(): void {

@@ -20,6 +20,11 @@ body {
   box-sizing: border-box;
 }
 
+.amount{
+  font-size: 20px;
+  color: green;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -41,4 +46,8 @@ mat-form-field {
   font-size: 1.2em;
   font-weight: bold;
   text-align: center;
+}
+
+.error {
+  color:red;
 }

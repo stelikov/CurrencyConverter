@@ -25,10 +25,19 @@
   </div>
   <div>
     <label for="date">Date:</label>
-    <input id="date" formControlName="date" type="date">
+    <input (change)="onChange()" id="date" formControlName="date" type="date">
   </div>
   <button type="submit">Convert</button>
 </form>
-<div *ngIf="convertedAmount">
+<div class="amount" *ngIf="convertedAmount">
   Converted Amount: {{ convertedAmount }}
+</div>
+<div *ngIf="errorMessage" class="error">
+  Error: {{ errorMessage }}
+</div>
+<div *ngIf="rates">
+  <h3>Rates for {{ converterForm.value.date }}:</h3>
+  <ul>
+    <li *ngFor="let rate of rates">{{ rate }}</li>
+  </ul>
 </div>

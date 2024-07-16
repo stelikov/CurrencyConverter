@@ -14,26 +14,32 @@ public class CurrencyController : ControllerBase
         _currencyService = currencyService;
     }
 
-    [HttpGet("update-rates")]
-    public async Task<IActionResult> UpdateRates()
-    {
-        await _currencyService.UpdateRates();
-        return Ok();
-    }
-
     [HttpGet("convert")]
     public async Task<IActionResult> Convert(string fromCurrency, string toCurrency, decimal amount, DateTime date)
     {
         try
         {
-            await _currencyService.UpdateRates();
-
             var rates = _currencyService.GetRatesByDate(date);
             var fromRate = rates[fromCurrency];
             var toRate = rates[toCurrency];
 
             var convertedAmount = amount * (toRate / fromRate);
-            return Ok(convertedAmount.ToString("#.####"));
+            var roundedAmount = Math.Round(convertedAmount, 4);
+            return Ok(roundedAmount);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("rates")]
+    public async Task<IActionResult> GetRates(DateTime date)
+    {
+        try
+        {
+            var rates = _currencyService.GetRatesListByDate(date);
+            return Ok(rates);
         }
         catch (Exception ex)
         {
