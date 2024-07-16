@@ -1,0 +1,34 @@
+<form [formGroup]="converterForm" (ngSubmit)="onSubmit()">
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>From</mat-label>
+      <mat-select formControlName="fromCurrency">
+        <mat-option *ngFor="let currency of currencies" [value]="currency">
+          {{ currency }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>To</mat-label>
+      <mat-select formControlName="toCurrency">
+        <mat-option *ngFor="let currency of currencies" [value]="currency">
+          {{ currency }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+    <label for="amount">Amount:</label>
+    <input id="amount" formControlName="amount" type="number">
+  </div>
+  <div>
+    <label for="date">Date:</label>
+    <input id="date" formControlName="date" type="date">
+  </div>
+  <button type="submit">Convert</button>
+</form>
+<div *ngIf="convertedAmount">
+  Converted Amount: {{ convertedAmount }}
+</div>
